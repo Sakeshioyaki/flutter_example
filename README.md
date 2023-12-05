@@ -4,3 +4,4 @@
 # Using
 State management which this project using: 
  - Stream 
+ - Bloc cubit
