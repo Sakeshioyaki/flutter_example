@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_example/bloc_cubit/my_bloc_cubit/my_bloc_page.dart';
+import 'package:flutter_example/bloc_cubit/my_bloc_page.dart';
 
 void main() {
   runApp(const MyApp());

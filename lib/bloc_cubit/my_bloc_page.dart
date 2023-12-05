@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_example/bloc_cubit/my_bloc_cubit/my_bloc_state.dart';
-import 'package:flutter_example/bloc_cubit/my_bloc_cubit/my_bloc_state_2.dart';
+import 'package:flutter_example/bloc_cubit/my_bloc_state.dart';
+import 'package:flutter_example/bloc_cubit/my_bloc_state_2.dart';
 
 import 'my_bloc_cubit.dart';
 
