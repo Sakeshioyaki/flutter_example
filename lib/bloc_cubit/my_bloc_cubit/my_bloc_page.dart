@@ -2,8 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_example/bloc_cubit/my_bloc_state.dart';
-import 'package:flutter_example/bloc_cubit/my_bloc_state_2.dart';
+import 'package:flutter_example/bloc_cubit/bloc_cubit_2/second_bloc_cubit.dart';
+import 'package:flutter_example/bloc_cubit/bloc_cubit_2/second_bloc_page.dart';
+import 'package:flutter_example/bloc_cubit/my_bloc_cubit/my_bloc_state.dart';
+import 'package:flutter_example/bloc_cubit/my_bloc_cubit/my_bloc_state_2.dart';
 
 import 'my_bloc_cubit.dart';
 
@@ -43,22 +45,24 @@ class MyBlocChildPage extends StatefulWidget {
 
 class _MyBlocChildPageState extends State<MyBlocChildPage> {
   late final MyBlocCubit _cubit;
+  late final SecondBlocCubit _cubit2;
   bool? selectTest;
 
   @override
   void initState() {
     super.initState();
+    _cubit2 = BlocProvider.of(context);
 
     ///1 lan
     _cubit = BlocProvider.of(context);
-    _cubit = context.read<MyBlocCubit>();
-
-    ///many time
-    _cubit = context.watch<MyBlocCubit>();
-    _cubit = BlocProvider.of<MyBlocCubit>(context, listen: true);
-
-    //selector
-    selectTest = context.select((MyBlocCubit cubit) => cubit.state.count1 >= 3);
+    // _cubit = context.read<MyBlocCubit>();
+    //
+    // ///many time
+    // _cubit = context.watch<MyBlocCubit>();
+    // _cubit = BlocProvider.of<MyBlocCubit>(context, listen: true);
+    //
+    // //selector
+    // selectTest = context.select((MyBlocCubit cubit) => cubit.state.count1 >= 3);
   }
 
   @override
@@ -99,6 +103,23 @@ class _MyBlocChildPageState extends State<MyBlocChildPage> {
                 Text('count 1:        ${value.something}'),
                 const SizedBox(height: 50),
                 Text('count random:   ${value.something}'),
+                const SizedBox(height: 50),
+                BlocBuilder<SecondBlocCubit, SecondBlocState>(
+                  builder: (context, state) {
+                    return Text(
+                        'count from second page:   ${state.secondCounter}');
+                  },
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SecondBlocPage()),
+                    );
+                  },
+                  child: const Text('NAVIGATOR TO PAGE 2'),
+                ),
               ],
             );
           },
@@ -130,13 +151,17 @@ class _MyBlocChildPageState extends State<MyBlocChildPage> {
             tooltip: 'prople',
             child: const Icon(Icons.square),
           ),
+          const SizedBox(height: 30),
+          FloatingActionButton(
+            onPressed: () {
+              _cubit2.increment();
+            },
+            tooltip: 'prople',
+            child: const Icon(Icons.send_outlined),
+          ),
         ],
       ),
     );
-  }
-
-  Widget _buildBodyWidget() {
-    return Container();
   }
 
   @override

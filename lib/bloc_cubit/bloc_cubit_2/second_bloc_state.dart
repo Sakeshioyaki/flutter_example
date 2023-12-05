@@ -1,12 +1,21 @@
 part of 'second_bloc_cubit.dart';
 
 class SecondBlocState extends Equatable {
-  const SecondBlocState();
+  final int secondCounter;
+  const SecondBlocState({
+    this.secondCounter = 0,
+  });
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [
+        secondCounter,
+      ];
 
-  SecondBlocState copyWith() {
-    return const SecondBlocState();
+  SecondBlocState copyWith({
+    int? secondCounter,
+  }) {
+    return SecondBlocState(
+      secondCounter: secondCounter ?? this.secondCounter,
+    );
   }
 }

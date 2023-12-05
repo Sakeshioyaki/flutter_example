@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_example/bloc_cubit/my_bloc_state.dart';
+import 'package:flutter_example/bloc_cubit/my_bloc_cubit/my_bloc_state.dart';
 
 class MyBlocCubit extends Cubit<MyBlocState> {
   MyBlocCubit() : super(const MyBlocState());

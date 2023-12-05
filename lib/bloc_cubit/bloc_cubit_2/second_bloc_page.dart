@@ -1,49 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_example/bloc_cubit/bloc_cubit_2/second_bloc_cubit.dart';
 
-import 'second_bloc_cubit.dart';
-
-class SecondBlocArguments {
-  String param;
-
-  SecondBlocArguments({
-    required this.param,
-  });
-}
-
-class SecondBlocPage extends StatelessWidget {
-  final SecondBlocArguments arguments;
-
-  const SecondBlocPage({
-    Key? key,
-    required this.arguments,
-  }) : super(key: key);
+class SecondBlocPage extends StatefulWidget {
+  const SecondBlocPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) {
-        return SecondBlocCubit();
-      },
-      child: const SecondBlocChildPage(),
-    );
-  }
+  State<SecondBlocPage> createState() => _SecondBlocChildPageState();
 }
 
-class SecondBlocChildPage extends StatefulWidget {
-  const SecondBlocChildPage({Key? key}) : super(key: key);
-
-  @override
-  State<SecondBlocChildPage> createState() => _SecondBlocChildPageState();
-}
-
-class _SecondBlocChildPageState extends State<SecondBlocChildPage> {
+class _SecondBlocChildPageState extends State<SecondBlocPage> {
   late final SecondBlocCubit _cubit;
 
   @override
   void initState() {
     super.initState();
-    _cubit = BlocProvider.of(context);
+    _cubit = context.read<SecondBlocCubit>();
   }
 
   @override
@@ -51,18 +23,25 @@ class _SecondBlocChildPageState extends State<SecondBlocChildPage> {
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
-        child: _buildBodyWidget(),
+        child: BlocBuilder<SecondBlocCubit, SecondBlocState>(
+          bloc: _cubit,
+          builder: (context, state) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text('this is second couter ${state.secondCounter}'),
+                TextButton(
+                  onPressed: () {
+                    _cubit.createCounter();
+                  },
+                  child: Text('PRESS TO CREATE SOME TEXT'),
+                )
+              ],
+            );
+          },
+        ),
       ),
     );
-  }
-
-  Widget _buildBodyWidget() {
-    return Container();
-  }
-
-  @override
-  void dispose() {
-    _cubit.close();
-    super.dispose();
   }
 }
