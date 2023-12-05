@@ -43,12 +43,22 @@ class MyBlocChildPage extends StatefulWidget {
 
 class _MyBlocChildPageState extends State<MyBlocChildPage> {
   late final MyBlocCubit _cubit;
+  bool? selectTest;
 
   @override
   void initState() {
     super.initState();
+
+    ///1 lan
     _cubit = BlocProvider.of(context);
-    _cubit.loadInitialData();
+    _cubit = context.read<MyBlocCubit>();
+
+    ///many time
+    _cubit = context.watch<MyBlocCubit>();
+    _cubit = BlocProvider.of<MyBlocCubit>(context, listen: true);
+
+    //selector
+    selectTest = context.select((MyBlocCubit cubit) => cubit.state.count1 >= 3);
   }
 
   @override
