@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_example/provider/my_provider_controller.dart';
+import 'package:flutter_example/provider/my_provider_controller2.dart';
 import 'package:provider/provider.dart';
 
 class MyProviderPage extends StatelessWidget {
@@ -11,10 +12,23 @@ class MyProviderPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) {
-        return MyProviderController();
-      },
+    // return ChangeNotifierProvider(
+    //   create: (context) {
+    //     return MyProviderController();
+    //   },
+    //   child: const MyBlocChildPage(),
+    // );
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<MyProviderController>(
+          create: (_) => MyProviderController(),
+        ),
+        // because chill need listenable value in myProvider2, so i need using subtype of Listenable/Stream. Do not use Provider<T>() instead
+        ChangeNotifierProvider<MyProviderController2>(
+          create: (_) => MyProviderController2(),
+        ),
+        //
+      ],
       child: const MyBlocChildPage(),
     );
   }
@@ -29,10 +43,12 @@ class MyBlocChildPage extends StatefulWidget {
 
 class _MyBlocChildPageState extends State<MyBlocChildPage> {
   late final MyProviderController _controller;
+  late final MyProviderController2 _controller2;
   @override
   void initState() {
     super.initState();
     _controller = context.read<MyProviderController>();
+    _controller2 = context.read<MyProviderController2>();
     //can't using "Provider.of<T>(context) == context.watch<T>()" outside of the build() method.
     // But if you still want to use it, then you need to set the listen parameter to false.
     // context.watch<T>(), which makes the widget listen to changes on T
@@ -46,21 +62,48 @@ class _MyBlocChildPageState extends State<MyBlocChildPage> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(24.0),
-        child: Consumer<MyProviderController>(
-          builder: (context, controller, child) {
-            return ListView.builder(
-              itemCount: _controller.items.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: 20,
-                  ),
-                  child: Text("$index : ${_controller.items[index]}"),
-                );
-              },
-            );
-          },
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Row(
+            children: [
+              Consumer<MyProviderController>(
+                builder: (context, controller, child) {
+                  return Flexible(
+                    child: ListView.builder(
+                      itemCount: _controller.items.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 8,
+                            horizontal: 20,
+                          ),
+                          child: Text("$index : ${_controller.items[index]}"),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+              Consumer<MyProviderController2>(
+                builder: (context, controller2, child) {
+                  return Flexible(
+                    child: ListView.builder(
+                      itemCount: _controller2.items.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 8,
+                            horizontal: 20,
+                          ),
+                          child: Text("$index : ${_controller2.items[index]}"),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: Column(
@@ -80,6 +123,14 @@ class _MyBlocChildPageState extends State<MyBlocChildPage> {
             },
             tooltip: 'prople',
             child: const Icon(Icons.delete),
+          ),
+          const SizedBox(height: 30),
+          FloatingActionButton(
+            onPressed: () {
+              _controller2.randomBool();
+            },
+            tooltip: 'prople',
+            child: const Icon(Icons.diamond_outlined),
           ),
         ],
       ),
