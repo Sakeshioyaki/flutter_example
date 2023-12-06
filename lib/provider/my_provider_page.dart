@@ -64,45 +64,87 @@ class _MyBlocChildPageState extends State<MyBlocChildPage> {
         padding: const EdgeInsets.all(24.0),
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
-          child: Row(
-            children: [
-              Consumer<MyProviderController>(
-                builder: (context, controller, child) {
-                  return Flexible(
+          /// ListenableProvider
+          /// ChangeNotifierProvider
+          /// ValueListenableProvider
+          /// StreamProvider
+          /// FutureProvider
+          // child: Row(
+          //   children: [
+          //     Consumer<MyProviderController>(
+          //       builder: (context, controller, child) {
+          //         return Flexible(
+          //           child: ListView.builder(
+          //             itemCount: _controller.items.length,
+          //             itemBuilder: (context, index) {
+          //               return Padding(
+          //                 padding: const EdgeInsets.symmetric(
+          //                   vertical: 8,
+          //                   horizontal: 20,
+          //                 ),
+          //                 child: Text("$index : ${_controller.items[index]}"),
+          //               );
+          //             },
+          //           ),
+          //         );
+          //       },
+          //     ),
+          //     Consumer<MyProviderController2>(
+          //       builder: (context, controller2, child) {
+          //         return Flexible(
+          //           child: ListView.builder(
+          //             itemCount: _controller2.items.length,
+          //             itemBuilder: (context, index) {
+          //               return Padding(
+          //                 padding: const EdgeInsets.symmetric(
+          //                   vertical: 8,
+          //                   horizontal: 20,
+          //                 ),
+          //                 child: Text("$index : ${_controller2.items[index]}"),
+          //               );
+          //             },
+          //           ),
+          //         );
+          //       },
+          //     ),
+          //   ],
+          // ),
+          child: Consumer2<MyProviderController, MyProviderController2>(
+            builder: (BuildContext context, MyProviderController controller1,
+                MyProviderController2 controller2, Widget? child) {
+              return Row(
+                children: [
+                  Flexible(
                     child: ListView.builder(
-                      itemCount: _controller.items.length,
+                      itemCount: controller1.items.length,
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(
                             vertical: 8,
                             horizontal: 20,
                           ),
-                          child: Text("$index : ${_controller.items[index]}"),
+                          child: Text("$index : ${controller1.items[index]}"),
                         );
                       },
                     ),
-                  );
-                },
-              ),
-              Consumer<MyProviderController2>(
-                builder: (context, controller2, child) {
-                  return Flexible(
+                  ),
+                  Flexible(
                     child: ListView.builder(
-                      itemCount: _controller2.items.length,
+                      itemCount: controller2.items.length,
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(
                             vertical: 8,
                             horizontal: 20,
                           ),
-                          child: Text("$index : ${_controller2.items[index]}"),
+                          child: Text("$index : ${controller2.items[index]}"),
                         );
                       },
                     ),
-                  );
-                },
-              ),
-            ],
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),
