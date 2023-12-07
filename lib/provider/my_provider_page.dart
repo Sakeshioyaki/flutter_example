@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_example/provider/my_provider_controller.dart';
 import 'package:flutter_example/provider/my_provider_controller2.dart';
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 class MyProviderPage extends StatelessWidget {
   const MyProviderPage({
@@ -58,12 +59,12 @@ class _MyBlocChildPageState extends State<MyBlocChildPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('REBUILD - ${Random().nextInt(100)}');
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
+
           /// ListenableProvider
           /// ChangeNotifierProvider
           /// ValueListenableProvider
@@ -109,42 +110,129 @@ class _MyBlocChildPageState extends State<MyBlocChildPage> {
           //     ),
           //   ],
           // ),
-          child: Consumer2<MyProviderController, MyProviderController2>(
-            builder: (BuildContext context, MyProviderController controller1,
-                MyProviderController2 controller2, Widget? child) {
-              return Row(
-                children: [
-                  Flexible(
-                    child: ListView.builder(
-                      itemCount: controller1.items.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 8,
-                            horizontal: 20,
-                          ),
-                          child: Text("$index : ${controller1.items[index]}"),
-                        );
-                      },
-                    ),
+          //   child: Consumer2<MyProviderController, MyProviderController2>(
+          //     builder: (BuildContext context, MyProviderController controller1,
+          //         MyProviderController2 controller2, Widget? child) {
+          //       return Row(
+          //         children: [
+          //           Flexible(
+          //             child: ListView.builder(
+          //               itemCount: controller1.items.length,
+          //               itemBuilder: (context, index) {
+          //                 return Padding(
+          //                   padding: const EdgeInsets.symmetric(
+          //                     vertical: 8,
+          //                     horizontal: 20,
+          //                   ),
+          //                   child: Text("$index : ${controller1.items[index]}"),
+          //                 );
+          //               },
+          //             ),
+          //           ),
+          //           Flexible(
+          //             child: ListView.builder(
+          //               itemCount: controller2.items.length,
+          //               itemBuilder: (context, index) {
+          //                 return Padding(
+          //                   padding: const EdgeInsets.symmetric(
+          //                     vertical: 8,
+          //                     horizontal: 20,
+          //                   ),
+          //                   child: Text("$index : ${controller2.items[index]}"),
+          //                 );
+          //               },
+          //             ),
+          //           ),
+          //         ],
+          //       );
+          //     },
+          //   ),
+          ///
+          // child: Selector2<MyProviderController, MyProviderController2,
+          //     Tuple2<List<int>, List<bool>>>(
+          //   selector: (context, _, __) {
+          //     return Tuple2(_.items, __.items);
+          //   },
+          //   builder: (BuildContext context, tuple, Widget? child) {
+          //     print('REBUILD - ${Random().nextInt(100)}');
+          //     return Row(
+          //       children: [
+          //         Flexible(
+          //           child: ListView.builder(
+          //             itemCount: tuple.item1.length,
+          //             itemBuilder: (context, index) {
+          //               return Padding(
+          //                 padding: const EdgeInsets.symmetric(
+          //                   vertical: 8,
+          //                   horizontal: 20,
+          //                 ),
+          //                 child: Text("$index : ${tuple.item1[index]}"),
+          //               );
+          //             },
+          //           ),
+          //         ),
+          //         Flexible(
+          //           child: ListView.builder(
+          //             itemCount: tuple.item2.length,
+          //             itemBuilder: (context, index) {
+          //               return Padding(
+          //                 padding: const EdgeInsets.symmetric(
+          //                   vertical: 8,
+          //                   horizontal: 20,
+          //                 ),
+          //                 child: Text("$index : ${tuple.item2[index]}"),
+          //               );
+          //             },
+          //           ),
+          //         ),
+          //       ],
+          //     );
+          //   },
+          // ),
+          ///
+          child: Row(
+            children: [
+              Consumer<MyProviderController>(
+                  builder: (context, controller1, chill) {
+                print(
+                    'REBUILD MyProviderController1 - ${Random().nextInt(100)}');
+                return Flexible(
+                  child: ListView.builder(
+                    itemCount: controller1.items.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 20,
+                        ),
+                        child: Text("$index : ${controller1.items[index]}"),
+                      );
+                    },
                   ),
-                  Flexible(
-                    child: ListView.builder(
-                      itemCount: controller2.items.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 8,
-                            horizontal: 20,
-                          ),
-                          child: Text("$index : ${controller2.items[index]}"),
-                        );
-                      },
-                    ),
+                );
+              }),
+              Selector<MyProviderController2, List<bool>>(
+                  selector: (context, _) {
+                return _.items;
+              }, builder: (BuildContext context, value, Widget? child) {
+                print(
+                    'REBUILD MyProviderController2 - ${Random().nextInt(100)}');
+                return Flexible(
+                  child: ListView.builder(
+                    itemCount: value.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 20,
+                        ),
+                        child: Text("$index : ${value[index]}"),
+                      );
+                    },
                   ),
-                ],
-              );
-            },
+                );
+              }),
+            ],
           ),
         ),
       ),
@@ -169,7 +257,7 @@ class _MyBlocChildPageState extends State<MyBlocChildPage> {
           const SizedBox(height: 30),
           FloatingActionButton(
             onPressed: () {
-              _controller2.randomBool();
+              _controller2.addCount();
             },
             tooltip: 'prople',
             child: const Icon(Icons.diamond_outlined),

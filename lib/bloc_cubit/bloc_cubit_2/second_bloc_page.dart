@@ -35,7 +35,7 @@ class _SecondBlocChildPageState extends State<SecondBlocPage> {
                   onPressed: () {
                     _cubit.createCounter();
                   },
-                  child: Text('PRESS TO CREATE SOME TEXT'),
+                  child: const Text('PRESS TO CREATE SOME TEXT'),
                 )
               ],
             );
